@@ -16,13 +16,27 @@ a field recording — and it becomes the material the spiral is built from.
 Everything runs in the browser. No build step, no dependencies, no uploads.
 
 ```bash
-npm start            # http://localhost:8080
+git clone https://github.com/syedsibtainhaidergardezi-png/Acceleration.git
+cd Acceleration
+npm start            # → http://localhost:8080
 ```
 
-(Or any static server: `python3 -m http.server 8080`. It must be served over
-`http://` — opening `index.html` from disk fails, because `file://` blocks both
-ES modules and `AudioWorklet.addModule`, and the result is a page that looks
-fine and makes no sound.)
+That is the whole setup. There are **no dependencies** — `npm install` is not
+needed and installs nothing. The server is ~60 lines of Node standard library;
+if the default port is taken it steps to the next free one, and `PORT=3000 npm
+start` overrides it.
+
+No Node? Any static server works, because the app is just files:
+
+```bash
+python3 -m http.server 8080
+```
+
+**It must be served over `http://`.** Opening `index.html` from disk does not
+work: the `file://` origin blocks both ES modules and
+`AudioWorklet.addModule`, so the page loads and looks perfectly fine while
+making no sound. The app detects this case and says so rather than leaving you
+guessing.
 
 ```bash
 npm test             # 58 tests, no dependencies

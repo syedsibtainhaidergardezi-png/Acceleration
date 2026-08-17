@@ -49,6 +49,19 @@ async function ensureEngine() {
     return state.engine;
   }
 
+  // Fail loudly and specifically on file://. Both ES module imports and
+  // AudioWorklet.addModule are blocked by that origin, so the page loads,
+  // renders perfectly, and makes no sound -- with an error in the console the
+  // user has no particular reason to open. Saying so up front costs nothing.
+  if (window.location.protocol === 'file:') {
+    setStatus(
+      'this page must be served over http:// — run "npm start" and open http://localhost:8080 ' +
+      '(opening the file directly blocks the audio engine)',
+      'error'
+    );
+    throw new Error('file:// origin cannot load AudioWorklets');
+  }
+
   setStatus('starting audio engine…');
   const ctx = new (window.AudioContext || window.webkitAudioContext)({
     latencyHint: 'playback', // favour stability over latency: this is a pad, not a keyboard
