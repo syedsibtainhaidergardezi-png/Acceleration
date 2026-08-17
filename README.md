@@ -40,6 +40,35 @@ npx playwright install chromium
 npm run verify
 ```
 
+### Deploying it
+
+It is a static site — no build step, and nothing runs on a server. `npm start`
+is a local convenience only. So any static host works; Vercel is the shortest
+path:
+
+```bash
+npx vercel          # preview
+npx vercel --prod   # production
+```
+
+Or import the repo at [vercel.com/new](https://vercel.com/new) — no settings to
+change. `vercel.json` pins framework detection off and the build command to
+none, so Vercel serves the repo root as-is instead of guessing; `.vercelignore`
+keeps the tests, tooling and dev server out of the upload.
+
+Hosting it does two useful things beyond convenience. It gives you HTTPS, which
+is a **secure context** — the same requirement that makes opening `index.html`
+from disk fail. And every path in the app is relative and the worklet URLs
+resolve through `import.meta.url`, so it works unchanged at a project root, on a
+preview URL, or under a subpath.
+
+GitHub Pages, Netlify, Cloudflare Pages and S3 all work the same way; there is
+nothing Vercel-specific about the app itself.
+
+One caveat worth knowing: browsers will not start audio until you interact with
+the page, so the first click on **Play** is what creates the AudioContext. That
+is expected everywhere, not a deployment problem.
+
 ---
 
 ## The idea
