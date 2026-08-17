@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Acceleration — Shepard tone synthesiser</title>
+<meta name="description" content="A synthesiser for infinite acceleration: Shepard–Risset glissandi, accelerating Risset rhythms, and sample-to-Shepard transformation.">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌀</text></svg>">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="brand">
+    <h1>ACCELERATION</h1>
+    <p class="tagline">Shepard–Risset synthesiser · a rise with no ceiling, a beat with no limit</p>
+  </div>
+
+  <div class="transport">
+    <button id="play" class="play">▶&nbsp;&nbsp;Play</button>
+    <button id="randomize" class="ghost" title="Randomise the musical choices, leaving the illusion's structure alone">Surprise me</button>
+  </div>
+</header>
+
+<div id="status" class="status">initialising</div>
+
+<nav class="presets-wrap">
+  <div id="presets" class="presets"></div>
+  <p id="preset-blurb" class="preset-blurb"></p>
+</nav>
+
+<main>
+  <section class="scope">
+    <div class="scope-head">
+      <h2>Spectrum &amp; stack</h2>
+      <div class="readouts">
+        <span><label>cycle</label><b id="readout-period">—</b></span>
+        <span><label>span</label><b id="readout-span">—</b></span>
+        <span><label>tempo doubling</label><b id="readout-doubling">—</b></span>
+      </div>
+    </div>
+    <canvas id="spectrum" class="canvas-spectrum"></canvas>
+    <p class="scope-note">
+      The dashed curve is the spectral window — it never moves. The dots are the partials,
+      sliding through it one octave at a time, fading to silence at the top and reappearing
+      at the bottom. That silent handover is the whole trick.
+    </p>
+
+    <h2 class="sub">Tempo stack</h2>
+    <canvas id="rhythmview" class="canvas-rhythm"></canvas>
+    <p class="scope-note">
+      The same window in the tempo domain. Each dot is a pulse layer accelerating rightward;
+      as the fastest fades out, a new slow one fades in underneath.
+    </p>
+  </section>
+
+  <section class="sampler">
+    <div class="scope-head">
+      <h2>Source audio</h2>
+      <span id="sample-name" class="sample-name">no file loaded</span>
+    </div>
+    <div id="sample-zone" class="drop-zone">
+      <canvas id="waveform" class="canvas-wave"></canvas>
+      <input type="file" id="file-input" accept="audio/*,.wav,.mp3,.flac,.ogg,.m4a,.aiff,.aif">
+    </div>
+    <p id="sample-meta" class="scope-note mono-note"></p>
+    <p class="scope-note">
+      Drop an audio file anywhere on this page, or click to browse. The highlighted region is the
+      auto-detected sustained part, which is what gets looped — then enable the
+      <strong>Sample</strong> layer to hear it spiral.
+    </p>
+  </section>
+
+  <section class="export">
+    <h2>Export</h2>
+    <div class="export-grid">
+      <label>Length
+        <input type="number" id="export-duration" value="60" min="2" max="600" step="1">
+      </label>
+      <label>Sample rate
+        <select id="export-rate">
+          <option value="44100">44.1 kHz</option>
+          <option value="48000" selected>48 kHz</option>
+          <option value="96000">96 kHz</option>
+        </select>
+      </label>
+      <label>Bit depth
+        <select id="export-depth">
+          <option value="16">16-bit</option>
+          <option value="24" selected>24-bit</option>
+          <option value="32">32-bit float</option>
+        </select>
+      </label>
+      <label class="check">
+        <input type="checkbox" id="export-seamless" checked>
+        Seamless loop
+      </label>
+    </div>
+    <p class="scope-note">
+      Rendered offline, faster than real time, from the exact settings you are hearing.
+      With <em>seamless loop</em> on, the length is snapped to a whole number of cycles and the
+      reverb tail is folded back onto the start — the file will loop forever with no seam.
+      Actual length: <b id="export-actual">—</b>
+    </p>
+    <button id="export" class="primary">Export WAV</button>
+  </section>
+
+  <section class="controls-wrap">
+    <div id="controls" class="controls"></div>
+  </section>
+</main>
+
+<footer>
+  <p>
+    <kbd>Space</kbd> play/stop · <kbd>R</kbd> restart from phase 0 ·
+    <kbd>↑</kbd><kbd>↓</kbd> octave time
+  </p>
+  <p class="muted">
+    Everything is synthesised in the browser. Nothing is uploaded — dropped audio never leaves this machine.
+  </p>
+</footer>
+
+<script type="module" src="src/main.js"></script>
+</body>
+</html>

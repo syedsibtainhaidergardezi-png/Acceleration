@@ -1,0 +1,32 @@
+{
+  "name": "acceleration",
+  "version": "1.0.0",
+  "description": "A Shepard\u2013Risset synthesiser: infinite acceleration as sound. Endless glissandi, endlessly accelerating rhythms, and sample-to-Shepard transformation.",
+  "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "shepard-tone",
+    "risset",
+    "auditory-illusion",
+    "web-audio",
+    "audioworklet",
+    "synthesiser",
+    "granular"
+  ],
+  "scripts": {
+    "start": "node scripts/serve.js",
+    "serve": "node scripts/serve.js",
+    "test": "node --test test/*.test.js",
+    "verify": "node tools/verify-audio.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "index.html",
+    "styles.css",
+    "src/",
+    "scripts/",
+    "tools/"
+  ]
+}
